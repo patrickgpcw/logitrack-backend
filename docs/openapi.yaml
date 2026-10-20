@@ -1,0 +1,43 @@
+openapi: 3.1.0
+info:
+  title: LogiTrack API
+  version: 0.1.0
+  description: Contrato inicial da T01. Os endpoints de negócio serão definidos na T02.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/health:
+    get:
+      operationId: getHealth
+      summary: Verifica a disponibilidade da aplicação e do banco
+      responses:
+        '200':
+          description: Aplicação e dependências disponíveis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+              example:
+                status: UP
+        '503':
+          description: Aplicação ou alguma dependência indisponível
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+              example:
+                status: DOWN
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [UP, DOWN, OUT_OF_SERVICE, UNKNOWN]
+        groups:
+          type: array
+          description: Grupos de saúde habilitados pelo Spring Boot
+          items:
+            type: string
